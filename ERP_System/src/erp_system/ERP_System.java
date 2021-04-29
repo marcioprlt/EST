@@ -41,7 +41,7 @@ public class ERP_System {
         CSVReader data;
         
         try {
-            FileReader fr = new FileReader("Products.csv");
+            FileReader fr = new FileReader("Products.csv"); //<------ dirección del CSV
             data = new CSVReader(fr);
             System.out.println("Datos leidos!");
         }
