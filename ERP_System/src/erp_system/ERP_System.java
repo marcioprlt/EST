@@ -111,10 +111,12 @@ public class ERP_System {
         catch (NumberFormatException nfe)
         {
             System.err.println("Error al convertir números!");
+            System.exit(0);
         }
         catch (Exception e)
         {
             System.err.println("No se leyeron los datos!");
+            System.exit(0);
         }
     }
  
