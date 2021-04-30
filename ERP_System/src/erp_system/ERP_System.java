@@ -47,6 +47,7 @@ public class ERP_System {
         }
         catch (Exception e) {
             System.err.println("Datos no fueron leidos!");
+            System.exit(0);
             return;
         }
         
