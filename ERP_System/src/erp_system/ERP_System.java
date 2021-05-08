@@ -25,12 +25,15 @@ public class ERP_System {
     
     public static ArrayList<Product> database = new ArrayList<>();
     public static String[] headers;
+    public static Node rootNode;
     
     public static void main(String[] args) {
         
         input = new Scanner(System.in);
         
         CargarDatos();
+        
+        rootNode = CrearNodo(0);
         
         Menu();
     }
@@ -120,6 +123,18 @@ public class ERP_System {
         }
     }
  
+    static Node CrearNodo(int i)
+    {
+        if (i >= database.size()) return null;
+            
+        Node n = new Node(database.get(i));
+        
+        n.setLeft(CrearNodo(2*i+1));
+        n.setRight(CrearNodo(2*i+2));
+        
+        return n;
+    }
+    
     static void Menu ()
     {
         String option;
@@ -129,7 +144,8 @@ public class ERP_System {
             System.out.println("1 – Buscar producto por código\n" +
                     "2 – Buscar producto por nombre\n"
                     + "3 - Retirar producto por código\n"
-                    + "4 - Salir");
+                    + "4 – Buscar por productos en árbol binaria\n"
+                    + "5 - Salir");
             
             option = input.nextLine();
             
@@ -145,6 +161,9 @@ public class ERP_System {
                     RetirarPorID();
                     break;
                 case "4":
+                    BuscarPorArbolBinaria();
+                    break;
+                case "5":
                     return;
                 default:
                     System.out.println("Opción inválida!");
@@ -167,10 +186,7 @@ public class ERP_System {
         id -= 1;
         
         //imprimir datos
-        System.out.printf("%-25s%d%n", "ID", database.get(id).getId());
-        System.out.printf("%-25s%s%n", "Nombre", database.get(id).getName());
-        System.out.printf("%-25s%.2f%n", "Precio", database.get(id).getPrice());
-        System.out.printf("%-25s%d%n", "Cantidad en stock", database.get(id).getStockList().size());
+        ImprimirDatos(database.get(id));
     }
     
     static void BuscarPorNombre()
@@ -267,6 +283,39 @@ public class ERP_System {
         
     }
     
+    static void BuscarPorArbolBinaria()
+    {
+        int id = GetInt("Ingresar ID a buscar:");
+        
+        if (BuscarEnNodo(rootNode, id))
+        {
+            
+        }
+        else
+        {
+            System.out.println("Producto no encontrado!");
+        }
+    }
+    
+    static boolean BuscarEnNodo(Node nodo, int id)
+    {
+        System.out.println("Buscando en Nodo " + nodo.getElement().getId());
+        
+        if (nodo.getElement().getId() == id)
+        {
+            ImprimirDatos(nodo.getElement());
+            return true;
+        }
+        
+        if (nodo.getLeft() != null)
+            if (BuscarEnNodo(nodo.getLeft(), id)) return true;
+        
+        if (nodo.getRight() != null)
+            if (BuscarEnNodo(nodo.getRight(), id)) return true;
+        
+        return false;
+    }
+    
     static int GetInt(String prompt)
     {
         System.out.println(prompt);
@@ -281,5 +330,13 @@ public class ERP_System {
                 System.err.println("No se pudo leer un entero!");
             }
         }
+    }
+    
+    static void ImprimirDatos(Product p)
+    {
+        System.out.printf("%-25s%d%n", "ID", p.getId());
+        System.out.printf("%-25s%s%n", "Nombre", p.getName());
+        System.out.printf("%-25s%.2f%n", "Precio", p.getPrice());
+        System.out.printf("%-25s%d%n", "Cantidad en stock", p.getStockList().size());
     }
 }
