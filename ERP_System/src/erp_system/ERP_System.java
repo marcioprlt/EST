@@ -145,7 +145,8 @@ public class ERP_System {
                     "2 – Buscar producto por nombre\n"
                     + "3 - Retirar producto por código\n"
                     + "4 – Buscar por productos en árbol binaria\n"
-                    + "5 - Salir");
+                    + "5 – Buscar por productos utilizando busqueda binaria\n"
+                    + "6 - Salir");
             
             option = input.nextLine();
             
@@ -164,6 +165,9 @@ public class ERP_System {
                     BuscarPorArbolBinaria();
                     break;
                 case "5":
+                    BuscarPorBusquedaBinaria();
+                    break;
+                case "6":
                     return;
                 default:
                     System.out.println("Opción inválida!");
@@ -287,11 +291,7 @@ public class ERP_System {
     {
         int id = GetInt("Ingresar ID a buscar:");
         
-        if (BuscarEnNodo(rootNode, id))
-        {
-            
-        }
-        else
+        if (!BuscarEnNodo(rootNode, id))
         {
             System.out.println("Producto no encontrado!");
         }
@@ -299,7 +299,7 @@ public class ERP_System {
     
     static boolean BuscarEnNodo(Node nodo, int id)
     {
-        System.out.println("Buscando en Nodo " + nodo.getElement().getId());
+        //System.out.println("Buscando en Nodo " + nodo.getElement().getId());
         
         if (nodo.getElement().getId() == id)
         {
@@ -313,6 +313,45 @@ public class ERP_System {
         if (nodo.getRight() != null)
             if (BuscarEnNodo(nodo.getRight(), id)) return true;
         
+        return false;
+    }
+    
+    static void BuscarPorBusquedaBinaria()
+    {
+        int id = GetInt("Ingrese ID a ser buscada:");
+        
+        if (id < 1 || id > database.size())
+        {
+            System.out.println("Id no válido!");
+            return;
+        }
+        
+        if (!BusquedaBinaria(id, 0, database.size()))
+        {
+            System.out.println("No se pudo encontrar ese producto!");
+        }
+    }
+    
+    static boolean BusquedaBinaria(int item, int start, int end)
+    {
+        int search = start + (end-start) / 2;
+        int currentItem = database.get(search).getId();
+        
+        //System.out.println("Buscando id " + search + " = " + currentItem);
+        
+        if (item == currentItem)
+        {
+            ImprimirDatos(database.get(search));
+            return true;
+        }
+        else if (item < currentItem)
+        {
+            return BusquedaBinaria(item, start, search - 1);
+        }
+        else if (item > currentItem)
+        {
+            return BusquedaBinaria(item, search + 1, end);
+        }
         return false;
     }
     
